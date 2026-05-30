@@ -1,4 +1,4 @@
-
+import { Link } from "react-router-dom"
 function Header({setsearchquery}) {
 
 
@@ -17,9 +17,9 @@ document.body.classList.toggle('dark')
 
      
     <nav style={{display:"flex",gap:"10px" }} >
-        <a href="">HOME</a>
-        <a href="">PRODUCTS</a>
-        <a href="">ABOUT</a>
+      <a href="">HOME</a>
+     <Link to={'/products'}  ><a href="">PRODUCTS</a>  </Link>    
+     <Link to={'/about'}   ><a href="">ABOUT</a>  </Link>    
         <a href="">SIGNUP</a>
         <a href="">SIGNIN</a>
     </nav>
