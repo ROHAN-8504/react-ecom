@@ -1,7 +1,7 @@
 
 import {useState,useEffect} from "react"
 import Card from './Card'
-function Products() {
+function Products({searchquery}) {
     const [products, setproducts] = useState([])
 //   //fetch the products from fakestore api
 //   async function fetchproducts(){
@@ -19,8 +19,10 @@ useEffect(() => {
       .then(data => setproducts(data));
       
 }, [])
-
-
+//filter out th producrs bas3d on searchquery
+  let filteredproducts=products.filter((p)=>{
+   return p.title.toLowerCase().includes(searchquery.toLowerCase())
+  })
 
 
 
@@ -30,7 +32,7 @@ useEffect(() => {
   return (
     <>
     {
-        products.map((e)=>{
+        filteredproducts.map((e)=>{
             return <Card image={e.image} title={e.title} price={e.price}    />
         })
     }
