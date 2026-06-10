@@ -14,11 +14,15 @@ function Products({searchquery}) {
 
 useEffect(() => {
     
-    fetch('https://fakestoreapi.com/products')
+    fetch('http://localhost:3000/products')
       .then(response => response.json())
       .then(data => setproducts(data));
       
 }, [])
+
+
+
+
 //filter out th producrs bas3d on searchquery
   let filteredproducts=products.filter((p)=>{
    return p.title.toLowerCase().includes(searchquery.toLowerCase())
@@ -31,11 +35,14 @@ useEffect(() => {
 
   return (
     <>
+    <div style={{display:"flex",flexWrap:"wrap"}} >
     {
         filteredproducts.map((e)=>{
             return <Card image={e.image} title={e.title} price={e.price}    />
         })
     }
+
+    </div>
     </>
   )
 }
