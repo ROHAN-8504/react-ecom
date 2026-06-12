@@ -1,28 +1,34 @@
 import {useState} from "react"
 
-
 function Signup() {
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
   const [email, setemail] = useState('')
   const [role, setrole] = useState('')
+ 
+
+  let onsubmit = async (event) => {
+    event.preventDefault()
 
 
-  let onsubmit=async (event)=>{
-                let userdetails={
-                  username,password,email,role
-                }
-                event.preventDefault();
-               let result=await fetch('http://localhost:3000/auth/register',{
-                  method:'POST',
-                  headers:{
-                    "Content-Type": "application/json"
-                  },
-                  body:JSON.stringify(userdetails)
-                })
-            let finalresponse=await result.json();
-            alert(`${finalresponse.msg}`)
-         }
+    let userdetails = { username, password, email, role }
+
+    let resultfetch = await fetch('http://localhost:3000/auth/register', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(userdetails)
+    })
+
+    let finalresponse = await resultfetch.json()
+
+    if (finalresponse.token) {
+      localStorage.setItem("token", finalresponse.token)
+    } else {
+      alert(finalresponse.msg || "something went wrong")
+    }
+  }
 
 
   return (
