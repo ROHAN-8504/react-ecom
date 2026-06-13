@@ -2,8 +2,8 @@
 function About() {
   return (
     <div>
-<section class="about-us">
-  <div class="container">
+<section className="about-us">
+  <div className="container">
     <h1>About Us</h1>
 
     <p>

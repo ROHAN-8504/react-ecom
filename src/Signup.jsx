@@ -1,32 +1,56 @@
 import {useState} from "react"
+import {useNavigate} from "react-router-dom"
+import {z} from 'zod'
+//usenavigate
+//schema
 
-function Signup() {
+ let usernameschema=z.string().min(6,"username must be atleast 6 characters")
+  let emailschema=z.string().email("invalid email format")
+ let  passwordschema=z.string().min(8,"password must be atleast 8 characters")
+  let roleschema=z.string().min(1,"role is required")
+
+
+
+function Signup({setisauth}) {
   const [username, setusername] = useState('')
   const [password, setpassword] = useState('')
   const [email, setemail] = useState('')
   const [role, setrole] = useState('')
+  let navigate=useNavigate()
+
  
+  function validate(schema,value){
+if(!value) return ""
+ let result= schema.safeParse(value)
+  if(result.success) return "valid"
+  return result.error.issues[0].message
+}
 
   let onsubmit = async (event) => {
     event.preventDefault()
+    
+    try {
+      let userdetails = { username, password, email, role }
+      let resultfetch = await fetch('http://localhost:3000/auth/register', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userdetails)
+      })
 
+      let finalresponse = await resultfetch.json()
 
-    let userdetails = { username, password, email, role }
-
-    let resultfetch = await fetch('http://localhost:3000/auth/register', {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(userdetails)
-    })
-
-    let finalresponse = await resultfetch.json()
-
-    if (finalresponse.token) {
-      localStorage.setItem("token", finalresponse.token)
-    } else {
-      alert(finalresponse.msg || "something went wrong")
+      if (finalresponse.token) {
+        localStorage.setItem("token", finalresponse.token)
+        setisauth(true)
+        navigate('/products')
+      } else {
+        alert(finalresponse.msg || "something went wrong")
+      }
+    } catch (error) {
+      console.log(error)
+      alert("something went wrong")
     }
   }
 
@@ -41,20 +65,23 @@ function Signup() {
         <input onChange={(e)=>{
             setusername(e.target.value)
         }}  type="text"   placeholder="username"   />
+        <p>{validate(usernameschema,username)}</p>
      </div>
 
      <div>
         <label >email</label>
         <input onChange={(e)=>{
                setemail(e.target.value)
-        }}     type="text" placeholder="email" />
+        }}     type="email" placeholder="email" />
+        <p>{validate(emailschema,email)}</p>
      </div>
 
      <div>
          <label>password</label>
          <input onChange={(e)=>{
             setpassword(e.target.value)
-         }} type="text" placeholder="password" />
+         }} type="password" placeholder="password" />
+         <p>{validate(passwordschema,password)}</p>
      </div>
 
      <div>
@@ -62,6 +89,7 @@ function Signup() {
         <input onChange={(e)=>{
              setrole(e.target.value)
         }}    type="text" placeholder="role" />
+        <p>{validate(roleschema,role)}</p>
      </div>
       <button type="submit" >register</button>
     </form>

@@ -38,7 +38,7 @@ useEffect(() => {
     <div style={{display:"flex",flexWrap:"wrap"}} >
     {
         filteredproducts.map((e)=>{
-            return <Card image={e.image} title={e.title} price={e.price}    />
+            return <Card key={e.id} image={e.image} title={e.title} price={e.price}    />
         })
     }
 
